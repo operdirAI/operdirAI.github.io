@@ -380,6 +380,19 @@
     .plot.pop .spark { animation: sparkpop .6s ease; }
     @keyframes sparkpop { 0% { opacity: 0; transform: translateX(-50%) scale(.4); } 45% { opacity: 1; transform: translateX(-50%) scale(1.25) translateY(-6px); } 100% { opacity: 0; transform: translateX(-50%) scale(1) translateY(-14px); } }
     @media (prefers-reduced-motion: reduce) { .plot.pop .veg { transition: none; } .plot.pop .spark { animation: none; } }
+
+    /* ---------- Celebration (хлопушки + конфетти на каждые 10) ---------- */
+    .confetti-layer { position: fixed; inset: 0; pointer-events: none; z-index: 9998; overflow: hidden; }
+    .confetti-piece { position: absolute; top: -12vh; opacity: 1; will-change: transform; animation: confetti-fall linear forwards; }
+    @keyframes confetti-fall { 0% { transform: translate3d(0,0,0) rotate(0); } 100% { transform: translate3d(var(--dx,0), 116vh, 0) rotate(var(--rot,720deg)); } }
+    .popper { position: fixed; bottom: 9%; font-size: 3.2rem; z-index: 10000; pointer-events: none; opacity: 0; }
+    .popper.l { left: 6%; animation: popper-l 1.5s ease forwards; }
+    .popper.r { right: 6%; animation: popper-r 1.5s ease forwards; }
+    @keyframes popper-l { 0% { opacity: 0; transform: translateY(24px) rotate(-30deg) scale(.5); } 22% { opacity: 1; transform: translateY(0) rotate(-18deg) scale(1.25); } 100% { opacity: 0; transform: translateY(-14px) rotate(-18deg) scale(1); } }
+    @keyframes popper-r { 0% { opacity: 0; transform: translateY(24px) rotate(30deg) scale(.5); } 22% { opacity: 1; transform: translateY(0) rotate(18deg) scale(1.25); } 100% { opacity: 0; transform: translateY(-14px) rotate(18deg) scale(1); } }
+    .celebrate-toast { position: fixed; left: 50%; top: 20%; transform: translateX(-50%); background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 18px; padding: 16px 26px; max-width: 90vw; text-align: center; font-weight: 800; font-size: 1.05rem; box-shadow: var(--shadow); z-index: 10001; opacity: 0; pointer-events: none; animation: toast-pop 4.2s ease forwards; }
+    @keyframes toast-pop { 0% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(.7); } 8% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.04); } 16% { transform: translateX(-50%) scale(1); } 85% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) scale(1); } }
+    @media (prefers-reduced-motion: reduce) { .confetti-layer, .popper { display: none; } .celebrate-toast { animation: none; opacity: 1; } }
   </style>
 </head>
 <body>
@@ -877,6 +890,34 @@
       var veggies = ['🥕','🥕','🥔','🧅','🌽','🥦','🍆','🥒','🍑','🥥','💡','🔦','🕯️','🔌','🔑','⌚','🦆','🪆','🧸','🪀','🎮','📱','🎺','🎱','🔮','🧴','🧼','🪮','🥫','🎈','🪨','🥚','🧦','🖍️','🥄','🍌'];
       var score = 0, HOLES = 1;
       function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
+      function celebrate(n) {
+        var colors = ['#2563EB','#0E9F8E','#F5A623','#E5392F','#7C3AED','#10B981','#FFC83D'];
+        var toast = document.createElement('div'); toast.className = 'celebrate-toast';
+        toast.textContent = '🎉 ' + n + ' подряд! Видишь — всё достаётся. Спокойно достанут и тебя.';
+        document.body.appendChild(toast);
+        var pl = document.createElement('div'); pl.className = 'popper l'; pl.textContent = '🎉';
+        var pr = document.createElement('div'); pr.className = 'popper r'; pr.textContent = '🎊';
+        var layer = null;
+        if (!reduce) {
+          document.body.appendChild(pl); document.body.appendChild(pr);
+          layer = document.createElement('div'); layer.className = 'confetti-layer';
+          for (var i = 0; i < 90; i++) {
+            var c = document.createElement('div'); c.className = 'confetti-piece';
+            c.style.left = (Math.random() * 100) + 'vw';
+            c.style.background = colors[Math.floor(Math.random() * colors.length)];
+            c.style.setProperty('--dx', (Math.random() * 30 - 15) + 'vw');
+            c.style.setProperty('--rot', (360 + Math.random() * 1080) + 'deg');
+            c.style.width = (6 + Math.random() * 8) + 'px';
+            c.style.height = (8 + Math.random() * 10) + 'px';
+            if (Math.random() < 0.3) c.style.borderRadius = '50%';
+            c.style.animationDuration = (2.2 + Math.random() * 1.6) + 's';
+            c.style.animationDelay = (Math.random() * 0.5) + 's';
+            layer.appendChild(c);
+          }
+          document.body.appendChild(layer);
+        }
+        setTimeout(function () { toast.remove(); pl.remove(); pr.remove(); if (layer) layer.remove(); }, 4200);
+      }
       function makePlot() {
         var plot = document.createElement('div');
         plot.className = 'plot';
@@ -898,6 +939,7 @@
             veg.style.transform = 'translateY(-185%) rotate(18deg)';
             veg.style.opacity = '0';
             score++; scoreEl.textContent = score;
+            if (score % 10 === 0) celebrate(score);
             setTimeout(function () { if (plot.parentNode === garden) garden.replaceChild(makePlot(), plot); }, 580);
           } else {
             veg.style.transform = 'translateY(' + up + '%)';
