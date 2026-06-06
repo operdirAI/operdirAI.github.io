@@ -949,13 +949,26 @@
           var up = -(pulls / resistance) * 30;
           if (pulls >= resistance) {
             plot.classList.add('pop');
-            veg.style.transform = 'translateY(-185%) rotate(18deg)';
-            veg.style.opacity = '0';
             score++; scoreEl.textContent = score;
             if (catchEl) { catchEl.textContent = item.e + ' ' + item.n + '!'; catchEl.classList.remove('show'); void catchEl.offsetWidth; catchEl.classList.add('show'); }
             if (logEl) { var chip = document.createElement('span'); chip.className = 'chip'; chip.textContent = item.e + ' ' + item.n; logEl.insertBefore(chip, logEl.firstChild); while (logEl.children.length > 10) logEl.removeChild(logEl.lastChild); }
             if (score % 10 === 0) celebrate(score);
-            setTimeout(function () { if (plot.parentNode === garden) garden.replaceChild(makePlot(), plot); }, 580);
+            var respawn = function () { if (plot.parentNode === garden) garden.replaceChild(makePlot(), plot); };
+            if (reduce) {
+              veg.style.opacity = '0';
+              setTimeout(respawn, 300);
+            } else {
+              veg.style.transition = 'bottom .35s ease-out, transform .35s ease-out';
+              veg.style.transform = 'rotate(8deg)';
+              veg.style.bottom = '50%';
+              setTimeout(function () {
+                veg.style.transition = 'bottom .45s ease-in, opacity .45s, transform .45s ease-in';
+                veg.style.bottom = '90%';
+                veg.style.opacity = '0';
+                veg.style.transform = 'rotate(16deg) scale(.85)';
+              }, 1150);
+              setTimeout(respawn, 1700);
+            }
           } else {
             veg.style.transform = 'translateY(' + up + '%)';
             if (!reduce) { try { veg.animate([{ transform: 'translateY(' + up + '%) rotate(-5deg)' }, { transform: 'translateY(' + up + '%) rotate(5deg)' }, { transform: 'translateY(' + up + '%)' }], { duration: 150 }); } catch (e) {} }
