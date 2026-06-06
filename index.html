@@ -285,6 +285,10 @@
     .eyebrow { letter-spacing: .05em; }
     .promise { letter-spacing: -0.01em; }
 
+    /* ---------- Founder (reverse helper) ---------- */
+    .helper.reverse { grid-template-columns: 1fr 260px; }
+    @media (max-width: 680px) { .helper.reverse { grid-template-columns: 1fr; } }
+
     /* ---------- Demo bar ---------- */
     .demobar { background: #1B1B2F; color: #fff; text-align: center; font-size: .85rem; font-weight: 600; padding: 9px 16px; line-height: 1.4; }
     .demobar b { color: #FFD2C0; }
@@ -567,6 +571,22 @@
       </div>
     </section>
 
+    <!-- FOUNDER -->
+    <section class="block" id="founder">
+      <div class="wrap">
+        <span class="eyebrow">Идейный вдохновитель</span>
+        <h2>Почему этот проект вообще появился</h2>
+        <div class="helper reverse">
+          <div>
+            <div class="role">Основатель проекта</div>
+            <p>Эту идею придумала не маркетинговая команда. Её придумал человек, который сам не раз попадал в такую ситуацию — и на себе знает этот коктейль из паники, стыда и «куда вообще бежать».</p>
+            <p style="font-weight:600;color:var(--ink)">Именно поэтому здесь всё устроено так, чтобы тебе помогли спокойно и без осуждения. Прошёл через это он — спокойно пройдёшь и ты.</p>
+          </div>
+          <div class="ilya-photo"><img src="founder.jpg" alt="Идейный вдохновитель проекта" style="object-position:50% 15%" onerror="this.remove()" /></div>
+        </div>
+      </div>
+    </section>
+
     <!-- URGENCY -->
     <section class="urgency">
       <div class="wrap">
@@ -674,6 +694,7 @@
           <a href="#why">Почему не стыдно</a>
           <a href="#stories">Истории</a>
           <a href="#helper">Кто поможет</a>
+          <a href="#founder">О проекте</a>
           <a href="#group">Группа поддержки</a>
           <a href="#faq">Вопросы</a>
         </nav>
