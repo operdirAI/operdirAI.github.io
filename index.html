@@ -317,6 +317,53 @@
       html { scroll-behavior: auto; }
       * { transition: none !important; }
     }
+
+    /* ===== ULTRA-MODERN TRUST THEME (override) ===== */
+    :root {
+      --bg: #F4F7FE;
+      --ink: #0F172A;
+      --muted: #5A6478;
+      --line: #E6EAF3;
+      --brand: #2563EB;
+      --brand-dark: #1D4ED8;
+      --accent: #0E9F8E;
+      --accent-soft: #E2F5F1;
+      --shadow: 0 16px 44px rgba(15, 23, 42, 0.10);
+      --shadow-sm: 0 4px 16px rgba(15, 23, 42, 0.06);
+      --radius: 20px;
+    }
+    header { background: rgba(244, 247, 254, 0.85); }
+    .eyebrow { background: #E5EDFF; }
+    .hero::before {
+      background:
+        radial-gradient(900px 400px at 80% -10%, #DCE7FF 0%, rgba(220,231,255,0) 60%),
+        radial-gradient(700px 360px at 4% 16%, #D7F3EE 0%, rgba(215,243,238,0) 55%);
+    }
+    .hero-photo, .ilya-photo { background: linear-gradient(150deg, #DCE7FF 0%, #EFF4FF 45%, #D7F3EE 100%); }
+    .ilya-photo::after { color: #94A8DA; }
+    .hero-badge { color: var(--ink); }
+    .btn-brand { box-shadow: 0 10px 26px rgba(37, 99, 235, .30); }
+    .demobar { background: #0F172A; }
+    .demobar b { color: #93C5FD; }
+    .obj-card.more { background: #E5EDFF; border-color: #C7D7FF; }
+    .group { background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%); }
+    .livemap { background: linear-gradient(180deg, #0F172A 0%, #15233E 100%); }
+    .group .eyebrow, .livemap .eyebrow { background: rgba(255,255,255,.12); color: #BFD6FF; }
+    .map-panel { background-color: #0B1220; }
+    details[open] { border-color: #C7D7FF; }
+    .form-row input:focus { box-shadow: 0 0 0 3px #D6E2FF; border-color: var(--brand); }
+    .logo .dot { box-shadow: 0 0 0 4px #D6E2FF; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37,99,235,.5); } 70% { box-shadow: 0 0 0 18px rgba(37,99,235,0); } 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); } }
+
+    /* hero person-card (Илья на первом экране, без дубля ниже) */
+    .person-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .person-card .hero-photo { aspect-ratio: 4 / 3; max-width: none; margin: 0; border-radius: 0; box-shadow: none; }
+    .person-body { padding: 22px 24px 24px; }
+    .person-body .role { color: var(--brand-dark); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: .82rem; }
+    .person-name { font-size: 1.5rem; margin: 4px 0 12px; }
+    .person-body .badge { display: inline-flex; align-items: center; gap: 8px; background: var(--accent-soft); color: #0a6f62; font-weight: 700; padding: 6px 14px; border-radius: 999px; font-size: .85rem; margin-bottom: 14px; }
+    .person-body p { color: var(--muted); margin: 0 0 18px; }
+    .person-card .btn { width: 100%; }
   </style>
 </head>
 <body>
@@ -361,9 +408,17 @@
           </div>
         </div>
         <div class="hero-visual">
-          <div class="hero-photo">
-            <img src="ilya.jpg" alt="Илья — старший по спокойствию" onerror="this.remove()" />
-            <span class="hero-badge"><span class="em">🤝</span> Илья · старший по спокойствию</span>
+          <div class="person-card">
+            <div class="hero-photo">
+              <img src="ilya.jpg" alt="Илья — старший по спокойствию" onerror="this.remove()" />
+            </div>
+            <div class="person-body">
+              <div class="role">Старший по спокойствию</div>
+              <h3 class="person-name">Илья</h3>
+              <div class="badge">✓ Без осуждения · Спокойно · По делу</div>
+              <p>Не врач в халате, а свой человек: спокойно поможет разобраться и подскажет, к кому идти. Без лекций и ухмылок. Написать можно о чём угодно — останется между вами.</p>
+              <a href="https://t.me/bez_paniki_demo" target="_blank" rel="noopener" class="btn btn-brand">✍️ Написать Илье</a>
+            </div>
           </div>
         </div>
       </div>
@@ -565,26 +620,6 @@
       </div>
     </section>
 
-    <!-- HELPER / ILYA -->
-    <section class="block alt" id="helper">
-      <div class="wrap">
-        <span class="eyebrow">Кто тебе поможет</span>
-        <h2>Здесь живой человек, а не регистратура</h2>
-        <p class="intro">Врачей часто боятся, потому что кажется — осудят. Тут наоборот: тебя встречает Илья, и вся его задача в том, чтобы ты выдохнул и понял, что делать.</p>
-        <div class="helper">
-          <div class="ilya-photo"><img src="ilya.jpg" alt="Илья — старший по спокойствию" onerror="this.remove()" /></div>
-          <div>
-            <div class="role">Старший по спокойствию</div>
-            <h3>Илья</h3>
-            <div class="badge">✓ Без осуждения · Спокойно · По делу</div>
-            <p>Илья здесь главный. Не врач в халате, а свой человек: спокойно поможет разобраться, подскажет, к кому и куда идти, и быстро сориентирует. Никаких лекций, ухмылок и «ну как вас угораздило» — только дело и поддержка.</p>
-            <p style="font-weight:600;color:var(--ink)">Ему можно написать о чём угодно. Это останется между вами.</p>
-            <a href="https://t.me/bez_paniki_demo" target="_blank" rel="noopener" class="btn btn-brand">✍️ Написать Илье</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- FOUNDER -->
     <section class="block" id="founder">
       <div class="wrap">
@@ -707,7 +742,6 @@
           <a href="#steps">Что делать</a>
           <a href="#why">Почему не стыдно</a>
           <a href="#stories">Истории</a>
-          <a href="#helper">Кто поможет</a>
           <a href="#founder">О проекте</a>
           <a href="#group">Группа поддержки</a>
           <a href="#faq">Вопросы</a>
