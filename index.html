@@ -369,11 +369,11 @@
 
     /* ---------- Antistress garden game ---------- */
     .garden-bar { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; font-weight: 700; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; box-shadow: var(--shadow-sm); }
-    .garden { margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 14px; max-width: 760px; }
+    .garden { margin-top: 18px; max-width: 300px; }
     .plot { position: relative; aspect-ratio: 1 / 1; background: linear-gradient(180deg, #D8B988 0%, #B98F5A 55%); border-radius: 16px; overflow: hidden; cursor: pointer; user-select: none; -webkit-user-select: none; box-shadow: inset 0 -10px 18px rgba(0,0,0,.18); outline: none; }
     .plot:focus-visible { box-shadow: inset 0 -10px 18px rgba(0,0,0,.18), 0 0 0 3px #C7D7FF; }
     .plot:active { transform: scale(.98); }
-    .plot .veg { position: absolute; left: 0; right: 0; bottom: 6%; text-align: center; font-size: clamp(2rem, 7vw, 2.6rem); }
+    .plot .veg { position: absolute; left: 0; right: 0; bottom: 6%; text-align: center; font-size: clamp(2.8rem, 13vw, 4.8rem); }
     .plot .soil { position: absolute; left: 0; right: 0; bottom: 0; height: 40%; background: linear-gradient(180deg, #7a5630, #5d401e); border-top: 4px solid #6b4d28; z-index: 2; box-shadow: 0 -3px 8px rgba(0,0,0,.2); }
     .plot .spark { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); z-index: 3; opacity: 0; font-size: 1.3rem; }
     .plot.pop .veg { transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; }
@@ -637,7 +637,7 @@
       <div class="wrap">
         <span class="eyebrow">Антистресс</span>
         <h2>Пока думаешь — потяни морковку</h2>
-        <p class="intro">Простая успокаивающая игра без правил и без проигрыша. Тяни — какая-то выскочит сразу, какая-то поупирается. Прямо как в жизни: главное не дёргать сгоряча.</p>
+        <p class="intro">Простая успокаивающая игра без правил и без проигрыша. Тяни — что-то выскочит сразу, что-то поупирается, а вылезти может что угодно: морковка, фонарик, а то и уточка. Прямо как в жизни: главное не дёргать сгоряча.</p>
         <span class="garden-bar">Вытащено: <b id="gScore">0</b> 🥕</span>
         <div class="garden" id="garden"></div>
         <p class="hall-note">Дыши ровно. Это просто грядка — а тебя тоже спокойно вытащат, без рывков и без осуждения.</p>
@@ -874,8 +874,8 @@
       var scoreEl = document.getElementById('gScore');
       if (!garden) return;
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var veggies = ['🥕','🥕','🥕','🥔','🧅','🥒','🌽','🥦','🍠','🍆'];
-      var score = 0, HOLES = 8;
+      var veggies = ['🥕','🥕','🥔','🧅','🌽','🥦','🍆','🥒','🍑','🥥','💡','🔦','🕯️','🔌','🔑','⌚','🦆','🪆','🧸','🪀','🎮','📱','🎺','🎱','🔮','🧴','🧼','🪮','🥫','🎈','🪨','🥚','🧦','🖍️','🥄','🍌'];
+      var score = 0, HOLES = 1;
       function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
       function makePlot() {
         var plot = document.createElement('div');
