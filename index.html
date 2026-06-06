@@ -366,6 +366,20 @@
     .person-card .btn { width: 100%; }
     .award-badge { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #FFF3D6, #FCE7A8); color: #7A5A12; border: 1px solid #EFD489; font-weight: 700; font-size: .85rem; padding: 7px 15px; border-radius: 999px; margin-bottom: 14px; box-shadow: var(--shadow-sm); }
     .award-badge .medal { font-size: 1.15rem; }
+
+    /* ---------- Antistress garden game ---------- */
+    .garden-bar { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; font-weight: 700; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; box-shadow: var(--shadow-sm); }
+    .garden { margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 14px; max-width: 760px; }
+    .plot { position: relative; aspect-ratio: 1 / 1; background: linear-gradient(180deg, #D8B988 0%, #B98F5A 55%); border-radius: 16px; overflow: hidden; cursor: pointer; user-select: none; -webkit-user-select: none; box-shadow: inset 0 -10px 18px rgba(0,0,0,.18); outline: none; }
+    .plot:focus-visible { box-shadow: inset 0 -10px 18px rgba(0,0,0,.18), 0 0 0 3px #C7D7FF; }
+    .plot:active { transform: scale(.98); }
+    .plot .veg { position: absolute; left: 0; right: 0; bottom: 6%; text-align: center; font-size: clamp(2rem, 7vw, 2.6rem); }
+    .plot .soil { position: absolute; left: 0; right: 0; bottom: 0; height: 40%; background: linear-gradient(180deg, #7a5630, #5d401e); border-top: 4px solid #6b4d28; z-index: 2; box-shadow: 0 -3px 8px rgba(0,0,0,.2); }
+    .plot .spark { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); z-index: 3; opacity: 0; font-size: 1.3rem; }
+    .plot.pop .veg { transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .55s; }
+    .plot.pop .spark { animation: sparkpop .6s ease; }
+    @keyframes sparkpop { 0% { opacity: 0; transform: translateX(-50%) scale(.4); } 45% { opacity: 1; transform: translateX(-50%) scale(1.25) translateY(-6px); } 100% { opacity: 0; transform: translateX(-50%) scale(1) translateY(-14px); } }
+    @media (prefers-reduced-motion: reduce) { .plot.pop .veg { transition: none; } .plot.pop .spark { animation: none; } }
   </style>
 </head>
 <body>
@@ -618,6 +632,18 @@
       </div>
     </section>
 
+    <!-- GAME -->
+    <section class="block" id="game">
+      <div class="wrap">
+        <span class="eyebrow">Антистресс</span>
+        <h2>Пока думаешь — потяни морковку</h2>
+        <p class="intro">Простая успокаивающая игра без правил и без проигрыша. Тяни — какая-то выскочит сразу, какая-то поупирается. Прямо как в жизни: главное не дёргать сгоряча.</p>
+        <span class="garden-bar">Вытащено: <b id="gScore">0</b> 🥕</span>
+        <div class="garden" id="garden"></div>
+        <p class="hall-note">Дыши ровно. Это просто грядка — а тебя тоже спокойно вытащат, без рывков и без осуждения.</p>
+      </div>
+    </section>
+
     <!-- STORIES -->
     <section class="block" id="stories">
       <div class="wrap">
@@ -764,6 +790,7 @@
           <a href="#hall">Зал славы</a>
           <a href="#steps">Что делать</a>
           <a href="#why">Почему не стыдно</a>
+          <a href="#game">Антистресс</a>
           <a href="#stories">Истории</a>
           <a href="#founder">О проекте</a>
           <a href="#group">Группа поддержки</a>
@@ -840,6 +867,48 @@
       }
       tick();
       setInterval(tick, 4000 + Math.floor(Math.random() * 3500));
+    })();
+    // Антистресс-грядка: тяни морковку. Какая-то идёт легко, какая-то упирается.
+    (function () {
+      var garden = document.getElementById('garden');
+      var scoreEl = document.getElementById('gScore');
+      if (!garden) return;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var veggies = ['🥕','🥕','🥕','🥔','🧅','🥒','🌽','🥦','🍠','🍆'];
+      var score = 0, HOLES = 8;
+      function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
+      function makePlot() {
+        var plot = document.createElement('div');
+        plot.className = 'plot';
+        plot.tabIndex = 0;
+        plot.setAttribute('role', 'button');
+        plot.setAttribute('aria-label', 'Потянуть овощ с грядки');
+        var resistance = rnd(1, 4), pulls = 0;
+        var veg = document.createElement('span'); veg.className = 'veg';
+        veg.textContent = veggies[Math.floor(Math.random() * veggies.length)];
+        var soil = document.createElement('span'); soil.className = 'soil';
+        var spark = document.createElement('span'); spark.className = 'spark'; spark.textContent = '🎉';
+        plot.appendChild(veg); plot.appendChild(soil); plot.appendChild(spark);
+        function pull() {
+          if (plot.classList.contains('pop')) return;
+          pulls++;
+          var up = -(pulls / resistance) * 30;
+          if (pulls >= resistance) {
+            plot.classList.add('pop');
+            veg.style.transform = 'translateY(-185%) rotate(18deg)';
+            veg.style.opacity = '0';
+            score++; scoreEl.textContent = score;
+            setTimeout(function () { if (plot.parentNode === garden) garden.replaceChild(makePlot(), plot); }, 580);
+          } else {
+            veg.style.transform = 'translateY(' + up + '%)';
+            if (!reduce) { try { veg.animate([{ transform: 'translateY(' + up + '%) rotate(-5deg)' }, { transform: 'translateY(' + up + '%) rotate(5deg)' }, { transform: 'translateY(' + up + '%)' }], { duration: 150 }); } catch (e) {} }
+          }
+        }
+        plot.addEventListener('click', pull);
+        plot.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pull(); } });
+        return plot;
+      }
+      for (var i = 0; i < HOLES; i++) { garden.appendChild(makePlot()); }
     })();
   </script>
 
